@@ -4,6 +4,7 @@ const greeting = document.querySelector('.greeting');
 const name = document.querySelector('.name');
 const body = document.querySelector('body');
 const nextSlider = document.querySelector('.slide-next');
+const prevSlider = document.querySelector('.slide-prev');
 
 let randomNum;
 
@@ -14,6 +15,7 @@ window.addEventListener('load', () => {
 });
 
 nextSlider.addEventListener('click', getSlideNext);
+prevSlider.addEventListener('click', getSlidePrev);
 //Date and time
 
 function showTime() {
@@ -88,34 +90,50 @@ function setBg() {
 //Slider
 
 function timeOfDayForUrl() {
-    let timeOfDay;
-
     if (randomNum > 0 && randomNum <= 5) {
-       return timeOfDay = 'night';
+       return 'night';
     }
 
     if (randomNum > 5 && randomNum <= 10) {
-        return timeOfDay = 'morning';
+        return 'morning';
     }
 
     if (randomNum > 10 && randomNum <= 15) {
-        return timeOfDay = 'afternoon';
+        return 'afternoon';
     }
 
     if (randomNum > 15 && randomNum <= 20) {
-        return timeOfDay = 'evening';
+        return 'evening';
     }
 }
 
 function getSlideNext() {
-
     if (+randomNum === 20) {
         randomNum = 1;
     } else {
-        +randomNum++;
+        randomNum = parseInt(randomNum);
+        randomNum += 1;
     }
 
-   let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDayForUrl()}/${String(randomNum).padStart(2, '0')}.jpg`;
-   console.log(newUrl);
-   body.style.backgroundImage = `url(${newUrl})`;
+    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDayForUrl()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    const img = new Image();
+    img.src = newUrl;
+    img.onload = () => {
+        body.style.backgroundImage = `url(${newUrl})`;
+    };
+}
+
+function getSlidePrev() {
+    if (+randomNum === 1) {
+        randomNum = 20;
+    } else {
+        +randomNum--;
+    }
+
+    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDayForUrl()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    const img = new Image();
+    img.src = newUrl;
+    img.onload = () => {
+        body.style.backgroundImage = `url(${newUrl})`;
+    };
 }
