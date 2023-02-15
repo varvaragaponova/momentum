@@ -85,42 +85,11 @@ function getRandomNum(min, max) {
 
 function setBg() {
     const timeForPicture = getTimeOfDay();
-    switch (timeForPicture) {
-        case 'night':
-            getRandomNum(0, 5);
-            break;
-        case 'morning':
-            getRandomNum(6, 10);
-            break;
-        case 'afternoon':
-            getRandomNum(11, 15);
-            break;
-        case 'evening':
-            getRandomNum(16, 20);
-            break;
-    }
+    getRandomNum(1, 20);
     return `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
 }
 
 //Slider
-
-function timeOfDayForUrl() {
-    if (randomNum > 0 && randomNum <= 5) {
-        return 'night';
-    }
-
-    if (randomNum > 5 && randomNum <= 10) {
-        return 'morning';
-    }
-
-    if (randomNum > 10 && randomNum <= 15) {
-        return 'afternoon';
-    }
-
-    if (randomNum > 15 && randomNum <= 20) {
-        return 'evening';
-    }
-}
 
 function getSlideNext() {
     if (+randomNum === 20) {
@@ -130,7 +99,7 @@ function getSlideNext() {
         randomNum += 1;
     }
 
-    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDayForUrl()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
     const img = new Image();
     img.src = newUrl;
     img.onload = () => {
@@ -145,7 +114,7 @@ function getSlidePrev() {
         +randomNum--;
     }
 
-    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDayForUrl()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
     const img = new Image();
     img.src = newUrl;
     img.onload = () => {
