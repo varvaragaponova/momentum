@@ -5,17 +5,32 @@ const name = document.querySelector('.name');
 const body = document.querySelector('body');
 const nextSlider = document.querySelector('.slide-next');
 const prevSlider = document.querySelector('.slide-prev');
+const weatherIcon = document.querySelector('.weather-icon');
+const temperature = document.querySelector('.temperature');
+const weatherDescription = document.querySelector('.weather-description');
+const wind = document.querySelector('.wind');
+const humidity = document.querySelector('.humidity');
+const city = document.querySelector('.city');
+const error = document.querySelector('.errorInput');
+const weatherInfo = document.querySelector('.weather-info');
+const weather = document.querySelector('.weather');
 
 let randomNum;
 
-window.addEventListener('beforeunload', setLocalStorage);
+window.addEventListener('beforeunload', () => {
+    setLocalStorage();
+    setLocalStorageWeather();
+});
 window.addEventListener('load', () => {
     getLocalStorage();
+    getLocalStorageWeather();
+    getWeather();
     body.style.backgroundImage = `url(${setBg()})`;
 });
 
 nextSlider.addEventListener('click', getSlideNext);
 prevSlider.addEventListener('click', getSlidePrev);
+city.addEventListener('change', getWeather);
 //Date and time
 
 function showTime() {
@@ -25,13 +40,13 @@ function showTime() {
     showDate();
     showGreeting();
     setTimeout(showTime, 1000);
-  }
+}
 
 showTime();
 
 function showDate() {
     const date = new Date();
-    const options = {weekday: 'long', month: 'long', day: 'numeric'};
+    const options = { weekday: 'long', month: 'long', day: 'numeric' };
     const currentDate = date.toLocaleDateString('en-US', options);
     dateElement.textContent = `${currentDate}`;
 }
@@ -55,8 +70,8 @@ function setLocalStorage() {
 }
 
 function getLocalStorage() {
-    if(localStorage.getItem('name')) {
-      name.value = localStorage.getItem('name');
+    if (localStorage.getItem('name')) {
+        name.value = localStorage.getItem('name');
     }
 }
 
@@ -91,7 +106,7 @@ function setBg() {
 
 function timeOfDayForUrl() {
     if (randomNum > 0 && randomNum <= 5) {
-       return 'night';
+        return 'night';
     }
 
     if (randomNum > 5 && randomNum <= 10) {
@@ -136,4 +151,60 @@ function getSlidePrev() {
     img.onload = () => {
         body.style.backgroundImage = `url(${newUrl})`;
     };
+}
+
+//Weather
+async function getWeather(e) {
+    let cityName = city.value;
+
+    if (e) {
+        cityName = e.target.value
+    }
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!res.ok) {
+        city.classList.add('error');
+        error.classList.add('open');
+        error.textContent = 'Please, enter the city again';
+        showHideWeather(false);
+        weather.style.justifyContent = 'flex-start';
+    } else {
+        showHideWeather(true);
+        city.classList.remove('error');
+        error.classList.remove('open');
+        weatherIcon.className = 'weather-icon owf';
+        weatherIcon.classList.add(`owf-${data.weather[0].id}`);
+        temperature.textContent = `${Math.round(data.main.temp)}°C`;
+        weatherDescription.textContent = data.weather[0].description;
+        wind.textContent = `Wind speed: ${Math.round(data.wind.speed)} m/s`;
+        humidity.textContent = `Humidity: ${data.main.humidity}%`;
+    }
+}
+
+function showHideWeather(isShow) {
+    if (!isShow) {
+        weatherIcon.style.display = 'none';
+        temperature.style.display = 'none';
+        weatherDescription.style.display = 'none';
+        wind.style.display = 'none';
+        humidity.style.display = 'none';
+        return;
+    }
+
+    weatherIcon.style.display = 'flex';
+    temperature.style.display = 'flex';
+    weatherDescription.style.display = 'flex';
+    wind.style.display = 'flex';
+    humidity.style.display = 'flex';
+}
+
+function setLocalStorageWeather() {
+    localStorage.setItem('city', city.value);
+}
+
+function getLocalStorageWeather() {
+    city.value = localStorage.getItem('city') || 'Minsk';
 }

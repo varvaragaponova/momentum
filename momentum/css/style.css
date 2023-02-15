@@ -159,10 +159,24 @@ body {
   background-color: transparent;
 }
 
+.city.error {
+  border-bottom: 3px solid #970C10;
+}
+
 .city::placeholder {
   font-size: 20px;
   color: #fff;
   opacity: .6;
+}
+
+.errorInput {
+  display: none;
+}
+
+.errorInput.open {
+  display: block;
+  font: 12px 700;
+  color: #FF0000;
 }
 
 .main {
