@@ -14,8 +14,12 @@ const city = document.querySelector('.city');
 const error = document.querySelector('.errorInput');
 const weatherInfo = document.querySelector('.weather-info');
 const weather = document.querySelector('.weather');
+const quote = document.querySelector('.quote');
+const author = document.querySelector('.author');
+const buttonQuote = document.querySelector('.change-quote');
 
 let randomNum;
+let quotesArr = [];
 
 window.addEventListener('beforeunload', () => {
     setLocalStorage();
@@ -25,12 +29,14 @@ window.addEventListener('load', () => {
     getLocalStorage();
     getLocalStorageWeather();
     getWeather();
+    getQuotes();
     body.style.backgroundImage = `url(${setBg()})`;
 });
 
 nextSlider.addEventListener('click', getSlideNext);
 prevSlider.addEventListener('click', getSlidePrev);
 city.addEventListener('change', getWeather);
+buttonQuote.addEventListener('click', getQuotes);
 //Date and time
 
 function showTime() {
@@ -77,15 +83,19 @@ function getLocalStorage() {
 
 //Picture
 
-function getRandomNum(min, max) {
+function getRandomNum(min, max, isRandomizePicture) {
     let minN = Math.ceil(min);
     let maxN = Math.floor(max);
-    randomNum = String(Math.floor(Math.random() * (maxN - minN + 1)) + minN).padStart(2, '0');
+    if (isRandomizePicture) {
+        randomNum = String(Math.floor(Math.random() * (maxN - minN + 1)) + minN).padStart(2, '0');
+    } else {
+        return Math.floor(Math.random() * (maxN - minN + 1)) + minN;
+    }
 }
 
 function setBg() {
     const timeForPicture = getTimeOfDay();
-    getRandomNum(1, 20);
+    getRandomNum(1, 20, true);
     return `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
 }
 
@@ -176,4 +186,18 @@ function setLocalStorageWeather() {
 
 function getLocalStorageWeather() {
     city.value = localStorage.getItem('city') || 'Minsk';
+}
+
+//Quote of the Day
+
+async function getQuotes() {
+    if (!quotesArr.length) {
+        const quotes = 'https://dummyjson.com/quotes';
+        const res = await fetch(quotes);
+        const data = await res.json();
+        quotesArr = data.quotes;
+    }
+    let numberForQuotes = getRandomNum(1, quotesArr.length);
+    quote.textContent = quotesArr[numberForQuotes - 1].quote;
+    author.textContent = quotesArr[numberForQuotes - 1].author;
 }
