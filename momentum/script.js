@@ -17,6 +17,20 @@ const weather = document.querySelector('.weather');
 const quote = document.querySelector('.quote');
 const author = document.querySelector('.author');
 const buttonQuote = document.querySelector('.change-quote');
+const player = document.querySelector('.play.player-icon');
+const nextPlayer = document.querySelector('.play-next');
+const prevPlayer = document.querySelector('.play-prev');
+const playListContainer = document.querySelector('.play-list');
+
+let audio;
+let playNum = 0;
+let itemPlayList;
+const sounds = [
+    'Aqua Caelestis',
+    'Ennio Morricone',
+    'River Flows In You',
+    'Summer Wind'
+]
 
 let randomNum;
 let quotesArr = [];
@@ -31,12 +45,24 @@ window.addEventListener('load', () => {
     getWeather();
     getQuotes();
     body.style.backgroundImage = `url(${setBg()})`;
+
+
+    sounds.forEach(song => {
+        const li = document.createElement('li');
+        li.classList.add('play-item');
+        li.textContent = song;
+        playListContainer.append(li);
+    });
 });
 
 nextSlider.addEventListener('click', getSlideNext);
 prevSlider.addEventListener('click', getSlidePrev);
 city.addEventListener('change', getWeather);
 buttonQuote.addEventListener('click', getQuotes);
+player.addEventListener('click', playPauseAudio);
+nextPlayer.addEventListener('click', playNext);
+prevPlayer.addEventListener('click', playPrev);
+
 //Date and time
 
 function showTime() {
@@ -201,3 +227,53 @@ async function getQuotes() {
     quote.textContent = quotesArr[numberForQuotes - 1].quote;
     author.textContent = quotesArr[numberForQuotes - 1].author;
 }
+
+//Audio
+
+function playPauseAudio() {
+    if (!audio) {
+        audio = new Audio();
+        audio.onended = playNext;
+        audio.src = `./assets/sounds/${sounds[playNum]}.mp3`;
+        audio.currentTime = 0;
+        itemPlayList = document.querySelectorAll('.play-item');
+    }
+
+    if (audio.paused) {
+        audio.play();
+        itemPlayList[playNum].classList.add('open');
+    } else {
+        audio.pause();
+    }
+    player.classList.toggle('pause');
+    player.classList.toggle('play');
+}
+
+function playNext() {
+    if (playNum === sounds.length - 1) {
+        playNum = 0;
+    } else {
+        playNum++;
+    }
+
+    audio.src = `./assets/sounds/${sounds[playNum]}.mp3`;
+    itemPlayList[playNum === 0 ? itemPlayList.length - 1 : playNum - 1].classList.remove('open');
+    itemPlayList[playNum].classList.add('open');
+
+    audio.play();
+}
+
+function playPrev() {
+    if (playNum === 0) {
+        playNum = sounds.length - 1;
+    } else {
+        playNum--;
+    }
+
+    audio.src = `./assets/sounds/${sounds[playNum]}.mp3`;
+    itemPlayList[playNum === itemPlayList.length - 1 ? 0 : playNum + 1].classList.remove('open');
+    itemPlayList[playNum].classList.add('open');
+
+    audio.play();
+}
+

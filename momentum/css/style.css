@@ -61,9 +61,15 @@ body {
 .play-item::before {
   content: "\2713";
   position: absolute;
-  left: 0;
+  left: 5px;
   top: 2px;
   font-weight: 900;
+}
+
+.play-item.open {
+  background-color: rgba(120, 120, 120, 0.5);
+  border-radius: 5px;
+  padding: 5px 20px;
 }
 
 .item-active::before {
