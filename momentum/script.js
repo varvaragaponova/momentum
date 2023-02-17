@@ -122,7 +122,7 @@ function getRandomNum(min, max, isRandomizePicture) {
 function setBg() {
     const timeForPicture = getTimeOfDay();
     getRandomNum(1, 20, true);
-    return `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
+    return `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
 }
 
 //Slider
@@ -135,7 +135,7 @@ function getSlideNext() {
         randomNum += 1;
     }
 
-    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    let newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
     const img = new Image();
     img.src = newUrl;
     img.onload = () => {
@@ -150,7 +150,7 @@ function getSlidePrev() {
         +randomNum--;
     }
 
-    let newUrl = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    let newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
     const img = new Image();
     img.src = newUrl;
     img.onload = () => {
