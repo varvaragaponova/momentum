@@ -21,6 +21,12 @@ const player = document.querySelector('.play.player-icon');
 const nextPlayer = document.querySelector('.play-next');
 const prevPlayer = document.querySelector('.play-prev');
 const playListContainer = document.querySelector('.play-list');
+const nowTimeOfSound = document.querySelector('.time-music-now');
+const allTimeOfSounds = document.querySelector('.time-music-all');
+const nameSounds = document.querySelector('.music-play');
+const inputRange = document.querySelector('input[type="range"]');
+const volumeButton = document.querySelector('.volume');
+const volumeSlider = document.querySelector('.volume-slider');
 
 let audio;
 let playNum = 0;
@@ -47,11 +53,22 @@ window.addEventListener('load', () => {
     body.style.backgroundImage = `url(${setBg()})`;
 
 
-    sounds.forEach(song => {
+    sounds.forEach((song, index) => {
         const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.textContent = song;
         li.classList.add('play-item');
-        li.textContent = song;
+        const buttonWithSong = document.createElement('button');
+        buttonWithSong.classList.add('play-mini');
+        li.appendChild(buttonWithSong);
+        li.appendChild(span);
         playListContainer.append(li);
+
+        buttonWithSong.addEventListener('click', function (e) {
+            this.classList.toggle('play-mini');
+            this.classList.toggle('pause-mini');
+            playPauseAudio(e, index);
+        })
     });
 });
 
@@ -230,26 +247,63 @@ async function getQuotes() {
 
 //Audio
 
-function playPauseAudio() {
+function playPauseAudio(e, indexFromPlayList) {
     if (!audio) {
         audio = new Audio();
         audio.onended = playNext;
-        audio.src = `./assets/sounds/${sounds[playNum]}.mp3`;
+        audio.src = `./assets/sounds/${sounds[indexFromPlayList !== undefined ? indexFromPlayList : playNum]}.mp3`;
         audio.currentTime = 0;
         itemPlayList = document.querySelectorAll('.play-item');
+        setInterval(() => {
+            inputRange.value = audio.currentTime * 100 / audio.duration;
+            nowTimeOfSound.textContent = getTimeCodeFromNum(audio.currentTime);
+        }, 500);
+        inputRange.addEventListener('input', (e) => {
+            audio.currentTime = e.target.value / 100 * audio.duration;
+        });
+        volumeButton.addEventListener('click', () => {
+            audio.muted = !audio.muted;
+            volumeButton.classList.toggle('muted');
+            volumeButton.classList.toggle('volume');
+        });
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value / 100;
+        });
+        audio.addEventListener('loadeddata', () => {
+            allTimeOfSounds.textContent = getTimeCodeFromNum(audio.duration);
+        });
+    }
+
+    if (indexFromPlayList !== undefined) {
+        if (playNum !== indexFromPlayList) {
+            const buttons = document.querySelectorAll('li button');
+            buttons[playNum].classList.add('play-mini');
+            buttons[playNum].classList.remove('pause-mini');
+            itemPlayList[playNum].classList.remove('open');
+
+            playNum = indexFromPlayList;
+            audio.src = `./assets/sounds/${sounds[indexFromPlayList]}.mp3`;
+            nameSounds.textContent = `${sounds[indexFromPlayList]}`;
+        }
     }
 
     if (audio.paused) {
         audio.play();
         itemPlayList[playNum].classList.add('open');
+        player.classList.add('pause');
+        player.classList.remove('play');
     } else {
         audio.pause();
+        player.classList.remove('pause');
+        player.classList.add('play');
     }
-    player.classList.toggle('pause');
-    player.classList.toggle('play');
+
+    nameSounds.textContent = `${sounds[playNum]}`;
 }
 
 function playNext() {
+    if(audio.pause()) return;
+
     if (playNum === sounds.length - 1) {
         playNum = 0;
     } else {
@@ -261,9 +315,13 @@ function playNext() {
     itemPlayList[playNum].classList.add('open');
 
     audio.play();
+    nameSounds.textContent = `${sounds[playNum]}`;
+    inputRange.value = 0;
 }
 
 function playPrev() {
+    if(audio.pause()) return;
+
     if (playNum === 0) {
         playNum = sounds.length - 1;
     } else {
@@ -275,5 +333,16 @@ function playPrev() {
     itemPlayList[playNum].classList.add('open');
 
     audio.play();
+    nameSounds.textContent = `${sounds[indexFromPlayList || playNum]}`;
+    inputRange.value = 0;
 }
 
+function getTimeCodeFromNum(num) {
+    let seconds = parseInt(num);
+    let minutes = parseInt(seconds / 60);
+    seconds -= minutes * 60;
+    const hours = parseInt(minutes / 60);
+    minutes -= hours * 60;
+
+    return `${String(minutes).padStart(2, 0)}:${String(seconds).padStart(2, 0)}`
+}

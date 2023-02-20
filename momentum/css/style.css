@@ -37,7 +37,6 @@ body {
   align-items: center;
   justify-content: space-between;
   width: 120px;
-  margin-bottom: 28px;
 }
 
 .play-list {
@@ -52,18 +51,33 @@ body {
   opacity: .8;
   cursor: pointer;
   transition: .3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .play-item:hover {
   opacity: 1;
 }
 
-.play-item::before {
-  content: "\2713";
-  position: absolute;
-  left: 5px;
-  top: 2px;
-  font-weight: 900;
+li button {
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.play-mini {
+  background-image: url("../assets/svg/play-mini.svg");
+  background-repeat: no-repeat;
+}
+
+.pause-mini {
+  background-image: url("../assets/svg/pause-mini.svg");
+  background-repeat: no-repeat;
 }
 
 .play-item.open {
@@ -77,6 +91,8 @@ body {
 }
 
 .player-icon,
+.volume,
+.muted,
 .slider-icon,
 .change-quote {
   width: 32px;
@@ -92,6 +108,14 @@ body {
   transition: .3s;
 }
 
+.volume {
+  background-image: url("../assets/img/icon-volume.png");
+}
+
+.muted {
+  background-image: url("../assets/img/icon-volume-muted.png");
+}
+
 .player-icon:hover,
 .slider-icon:hover,
 .change-quote:hover {
@@ -104,6 +128,16 @@ body {
   border: 0;
   outline: 0;
   transform: scale(1.1);
+}
+
+.player-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 25px;
+  background-color: rgba(265, 265, 265, 0.8);
+  padding: 10px;
+  border-radius: 20px;
 }
 
 .play {
@@ -123,6 +157,58 @@ body {
 
 .play-next {
   background-image: url("../assets/svg/play-next.svg");
+}
+
+.time-music-now,
+.time-music-all {
+  color:#000;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+
+input[type=range]:not(.volume-slider) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  overflow: hidden;
+}
+
+input[type=range].volume-slider {
+  width: 70px;
+}
+
+input[type=range]:not(.volume-slider)::-webkit-slider-runnable-track {
+  background-color: #fff;
+}
+
+input[type=range]:not(.volume-slider)::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #000;
+  cursor: pointer;
+  width:15px;
+  height: 15px;
+  margin-top: -4px;
+  box-shadow: -100px 0 0 100px #9a9a9a;
+}
+
+input[type=range]:not(.volume-slider)::-moz-range-track {
+    background-color: #fff;
+}
+
+
+input[type=range]:not(.volume-slider)::-moz-range-thumb {
+  background: #000;
+  cursor: pointer;
+  height: 7px;
+  border-radius:0px;
+  box-shadow: -100px 0px 0px 100px #9a9a9a;
+  padding: 0px;
+  margin: 0px;
 }
 
 .weather {

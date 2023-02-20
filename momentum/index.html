@@ -13,10 +13,20 @@
 <body>
   <header class="header">
     <div class="player">
-      <div class="player-controls">
-        <button class="play-prev player-icon"></button>
-        <button class="play player-icon"></button>
-        <button class="play-next player-icon"></button>
+      <div class="player-container">
+        <div class="player-controls">
+          <button class="play-prev player-icon"></button>
+          <button class="play player-icon"></button>
+          <button class="play-next player-icon"></button>
+        </div>
+        <span class="time-music-now">00:00</span>
+        <div class="progress">
+          <span class="music-play"></span>
+          <input type="range" max="100" value="0" step="1">
+        </div>
+        <span class="time-music-all">00:00</span>
+        <button class="volume"></button>
+        <input type="range" class="volume-slider" max="100" value="0" step="1">
       </div>
       <ul class="play-list"></ul>
     </div>
