@@ -274,9 +274,10 @@ function playPauseAudio(e, indexFromPlayList) {
         });
     }
 
+    const buttons = document.querySelectorAll('li button');
+
     if (indexFromPlayList !== undefined) {
         if (playNum !== indexFromPlayList) {
-            const buttons = document.querySelectorAll('li button');
             buttons[playNum].classList.add('play-mini');
             buttons[playNum].classList.remove('pause-mini');
             itemPlayList[playNum].classList.remove('open');
@@ -290,6 +291,7 @@ function playPauseAudio(e, indexFromPlayList) {
     if (audio.paused) {
         audio.play();
         itemPlayList[playNum].classList.add('open');
+        buttons[playNum].classList.add('pause-mini');
         player.classList.add('pause');
         player.classList.remove('play');
     } else {
@@ -304,6 +306,8 @@ function playPauseAudio(e, indexFromPlayList) {
 function playNext() {
     if(audio.pause()) return;
 
+    const buttons = document.querySelectorAll('li button');
+
     if (playNum === sounds.length - 1) {
         playNum = 0;
     } else {
@@ -314,6 +318,10 @@ function playNext() {
     itemPlayList[playNum === 0 ? itemPlayList.length - 1 : playNum - 1].classList.remove('open');
     itemPlayList[playNum].classList.add('open');
 
+    buttons[playNum].classList.add('pause-mini');
+    buttons[playNum === 0 ? itemPlayList.length - 1 : playNum - 1].classList.add('play-mini');
+    buttons[playNum === 0 ? itemPlayList.length - 1 : playNum - 1].classList.remove('pause-mini');
+
     audio.play();
     nameSounds.textContent = `${sounds[playNum]}`;
     inputRange.value = 0;
@@ -321,6 +329,8 @@ function playNext() {
 
 function playPrev() {
     if(audio.pause()) return;
+
+    const buttons = document.querySelectorAll('li button');
 
     if (playNum === 0) {
         playNum = sounds.length - 1;
@@ -332,8 +342,12 @@ function playPrev() {
     itemPlayList[playNum === itemPlayList.length - 1 ? 0 : playNum + 1].classList.remove('open');
     itemPlayList[playNum].classList.add('open');
 
+    buttons[playNum].classList.add('pause-mini');
+    buttons[playNum === itemPlayList.length - 1 ? 0 : playNum + 1].classList.add('play-mini');
+    buttons[playNum === itemPlayList.length - 1 ? 0 : playNum + 1].classList.remove('pause-mini');
+
     audio.play();
-    nameSounds.textContent = `${sounds[indexFromPlayList || playNum]}`;
+    nameSounds.textContent = `${sounds[playNum]}`;
     inputRange.value = 0;
 }
 
