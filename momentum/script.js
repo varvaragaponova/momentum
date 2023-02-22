@@ -30,6 +30,37 @@ const volumeSlider = document.querySelector('.volume-slider');
 const settingButton = document.querySelector('.settings');
 const settingWindow = document.querySelector('.settings-info');
 
+const translation = {
+    ru: {
+        greeting: ["Доброй ночи", "Доброе утро", "Добрый день", "Добрый вечер"],
+        weather: "Погода",
+        time: "Время",
+        date: "Дата",
+        quote: "Цитата",
+        player: "Плеер",
+        language: "Язык",
+        picture: "Изображение",
+        on: "Вкл",
+        off: "Выкл",
+        english: "Английский",
+        russian: "Русский",
+    },
+    eng: {
+        greeting: ["night", "morning", "afternoon", "evening"],
+        weather: "Weather",
+        time: "Time",
+        date: "Date",
+        quote: "Quote",
+        player: "Player",
+        language: "Language",
+        picture: "Picture",
+        on: "On",
+        off: "Off",
+        english: "English",
+        russian: "Russian",
+    }
+}
+
 let audio;
 let playNum = 0;
 let itemPlayList;
@@ -115,13 +146,23 @@ function showDate() {
 //Greeting
 
 function showGreeting() {
-    greeting.textContent = `Good ${getTimeOfDay()}`;
+    if (language === 'en') {
+        greeting.textContent = `Good ${getTimeOfDay()}`;
+    } else {
+        greeting.textContent = `${getTimeOfDay()}`;
+    }
+
 }
 
 function getTimeOfDay() {
     const date = new Date();
     const hours = date.getHours();
-    const arrTimeOfDay = ['night', 'morning', 'afternoon', 'evening'];
+    let arrTimeOfDay;
+    if (language === 'en') {
+        arrTimeOfDay = translation.eng.greeting;
+    } else {
+        arrTimeOfDay = translation.ru.greeting;
+    }
     const timeNow = Math.floor(hours / 6);
     return arrTimeOfDay[timeNow];
 }
@@ -203,7 +244,6 @@ async function getWeather(e) {
         url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=ru&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
     }
 
-    //const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
     const res = await fetch(url);
     const data = await res.json();
 
@@ -398,39 +438,6 @@ function getTimeCodeFromNum(num) {
     return `${String(minutes).padStart(2, 0)}:${String(seconds).padStart(2, 0)}`
 }
 
-//Translation
-
-const translation = {
-    ru: {
-        greeting: ["Доброй ночи", "Доброе утро", "Добрый день", "Добрый вечер"],
-        weather: "Погода",
-        time: "Время",
-        date: "Дата",
-        quote: "Цитата",
-        player: "Плеер",
-        language: "Язык",
-        picture: "Изображение",
-        on: "Вкл",
-        off: "Выкл",
-        english: "Английский",
-        russian: "Русский",
-    },
-    eng: {
-        greeting: ["Good night", "Good morning", "Good afternoon", "Good evening"],
-        weather: "Weather",
-        time: "Time",
-        date: "Date",
-        quote: "Quote",
-        player: "Player",
-        language: "Language",
-        picture: "Picture",
-        on: "On",
-        off: "Off",
-        english: "English",
-        russian: "Russian",
-    }
-}
-
 //Setting
 
 settingButton.addEventListener('click', (e) => {
@@ -453,5 +460,6 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
         showDate();
         getWeather();
         getLocalStorageWeather();
+        showGreeting();
     }
 })
