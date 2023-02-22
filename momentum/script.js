@@ -162,10 +162,15 @@ function getTimeOfDay() {
         arrTimeOfDay = translation.eng.greeting;
     } else {
         arrTimeOfDay = translation.ru.greeting;
+        document.querySelector('.name').placeholder = "Пожалуйста, введите ваше имя"
     }
     const timeNow = Math.floor(hours / 6);
     return arrTimeOfDay[timeNow];
 }
+
+// if (language === 'en') {
+//     document.querySelector('.name').placeholder = "Пожалуйста, введите ваше имя"
+// }
 
 function setLocalStorage() {
     localStorage.setItem('name', name.value);
@@ -300,10 +305,8 @@ function setLocalStorageWeather() {
 function getLocalStorageWeather() {
     if (language === 'en') {
         city.value = localStorage.getItem('city') || 'Minsk';
-        console.log(1);
     } else {
         city.value = localStorage.getItem('city') || 'Минск';
-        console.log(111);
     }
 }
 
