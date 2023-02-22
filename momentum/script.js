@@ -34,10 +34,11 @@ const radioButtonSetting = document.querySelectorAll('input[type="radio"]');
 
 const translation = {
     ru: {
-        greeting: ["Доброй ночи", "Доброе утро", "Добрый день", "Добрый вечер"],
+        greetingDay: ["Доброй ночи", "Доброе утро", "Добрый день", "Добрый вечер"],
         weather: "Погода",
         time: "Время",
         date: "Дата",
+        greeting: "Приветствие",
         quote: "Цитата",
         player: "Плеер",
         language: "Язык",
@@ -48,10 +49,11 @@ const translation = {
         russian: "Русский",
     },
     eng: {
-        greeting: ["night", "morning", "afternoon", "evening"],
+        greetingDay: ["night", "morning", "afternoon", "evening"],
         weather: "Weather",
         time: "Time",
         date: "Date",
+        greeting: "Greeting",
         quote: "Quote",
         player: "Player",
         language: "Language",
@@ -161,10 +163,10 @@ function getTimeOfDay() {
     const hours = date.getHours();
     let arrTimeOfDay;
     if (language === 'en') {
-        arrTimeOfDay = translation.eng.greeting;
+        arrTimeOfDay = translation.eng.greetingDay;
         document.querySelector('.name').placeholder = "Please, enter your name";
     } else {
-        arrTimeOfDay = translation.ru.greeting;
+        arrTimeOfDay = translation.ru.greetingDay;
         document.querySelector('.name').placeholder = "Пожалуйста, введите ваше имя";
     }
     const timeNow = Math.floor(hours / 6);
@@ -301,8 +303,12 @@ function setLocalStorageWeather() {
     localStorage.setItem('city', city.value);
 }
 
-function getLocalStorageWeather() {
-    city.value = localStorage.getItem('city') || 'Minsk';
+function getLocalStorageWeather(isFromTranslation) {
+
+    if(isFromTranslation) {
+        if (city.value !== 'Minsk' && city.value !== 'Минск') return;
+    }
+
     if (language === 'en') {
         city.value = localStorage.getItem('city') || 'Minsk';
     } else {
@@ -461,10 +467,11 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
 
     if (id === 'languageClose' || id === 'languageOpen') {
         language = value;
+        const isFromTranslation = true;
         showDate();
         getTimeOfDay();
         getWeather();
-        getLocalStorageWeather();
+        getLocalStorageWeather(isFromTranslation);
         showGreeting();
     }
 
