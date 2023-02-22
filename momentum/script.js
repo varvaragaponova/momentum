@@ -14,10 +14,11 @@ const city = document.querySelector('.city');
 const error = document.querySelector('.errorInput');
 const weatherInfo = document.querySelector('.weather-info');
 const weather = document.querySelector('.weather');
-const quote = document.querySelector('.quote');
+const quote = document.querySelector('.quote-container');
+const quotePhrase = document.querySelector('.quote');
 const author = document.querySelector('.author');
 const buttonQuote = document.querySelector('.change-quote');
-const player = document.querySelector('.play.player-icon');
+const playerPlay = document.querySelector('.play.player-icon');
 const nextPlayer = document.querySelector('.play-next');
 const prevPlayer = document.querySelector('.play-prev');
 const playListContainer = document.querySelector('.play-list');
@@ -29,6 +30,7 @@ const volumeButton = document.querySelector('.volume');
 const volumeSlider = document.querySelector('.volume-slider');
 const settingButton = document.querySelector('.settings');
 const settingWindow = document.querySelector('.settings-info');
+const radioButtonSetting = document.querySelectorAll('input[type="radio"]');
 
 const translation = {
     ru: {
@@ -110,7 +112,7 @@ nextSlider.addEventListener('click', getSlideNext);
 prevSlider.addEventListener('click', getSlidePrev);
 city.addEventListener('change', getWeather);
 buttonQuote.addEventListener('click', getQuotes);
-player.addEventListener('click', playPauseAudio);
+playerPlay.addEventListener('click', playPauseAudio);
 nextPlayer.addEventListener('click', playNext);
 prevPlayer.addEventListener('click', playPrev);
 
@@ -160,17 +162,14 @@ function getTimeOfDay() {
     let arrTimeOfDay;
     if (language === 'en') {
         arrTimeOfDay = translation.eng.greeting;
+        document.querySelector('.name').placeholder = "Please, enter your name";
     } else {
         arrTimeOfDay = translation.ru.greeting;
-        document.querySelector('.name').placeholder = "Пожалуйста, введите ваше имя"
+        document.querySelector('.name').placeholder = "Пожалуйста, введите ваше имя";
     }
     const timeNow = Math.floor(hours / 6);
     return arrTimeOfDay[timeNow];
 }
-
-// if (language === 'en') {
-//     document.querySelector('.name').placeholder = "Пожалуйста, введите ваше имя"
-// }
 
 function setLocalStorage() {
     localStorage.setItem('name', name.value);
@@ -303,6 +302,7 @@ function setLocalStorageWeather() {
 }
 
 function getLocalStorageWeather() {
+    city.value = localStorage.getItem('city') || 'Minsk';
     if (language === 'en') {
         city.value = localStorage.getItem('city') || 'Minsk';
     } else {
@@ -320,7 +320,7 @@ async function getQuotes() {
         quotesArr = data.quotes;
     }
     let numberForQuotes = getRandomNum(1, quotesArr.length);
-    quote.textContent = quotesArr[numberForQuotes - 1].quote;
+    quotePhrase.textContent = quotesArr[numberForQuotes - 1].quote;
     author.textContent = quotesArr[numberForQuotes - 1].author;
 }
 
@@ -371,13 +371,13 @@ function playPauseAudio(e, indexFromPlayList) {
         audio.play();
         itemPlayList[playNum].classList.add('open');
         buttons[playNum].classList.add('pause-mini');
-        player.classList.add('pause');
-        player.classList.remove('play');
+        playerPlay.classList.add('pause');
+        playerPlay.classList.remove('play');
     } else {
         audio.pause();
         buttons[playNum].classList.remove('pause-mini');
-        player.classList.remove('pause');
-        player.classList.add('play');
+        playerPlay.classList.remove('pause');
+        playerPlay.classList.add('play');
     }
 
     nameSounds.textContent = `${sounds[playNum]}`;
@@ -441,7 +441,7 @@ function getTimeCodeFromNum(num) {
     return `${String(minutes).padStart(2, 0)}:${String(seconds).padStart(2, 0)}`
 }
 
-//Setting
+//Setting and translate
 
 settingButton.addEventListener('click', (e) => {
     settingWindow.classList.toggle('open');
@@ -456,13 +456,34 @@ body.addEventListener('click', (e) => {
     }
 })
 
-//Translate
 settingWindow.addEventListener('click', ({ target: { id, value } }) => {
+    const elementsIds = ['weatherOpen', 'weatherClose', 'timeOpen', 'timeClose', 'dateOpen', 'dateClose', 'greetingOpen', 'greetingClose', 'quoteOpen', 'quoteClose', 'playerOpen', 'playerClose'];
+
     if (id === 'languageClose' || id === 'languageOpen') {
         language = value;
         showDate();
+        getTimeOfDay();
         getWeather();
         getLocalStorageWeather();
         showGreeting();
     }
+
+    if (elementsIds.includes(id)) showHideWidget(id);
 })
+
+function showHideWidget(targetId) {
+    let element;
+    const { name, value } = document.getElementById(targetId);
+    element = document.querySelector(`.${name}`);
+    if (name === 'quote') {
+        element = document.querySelector('.quote-container');
+    }
+    if (name === 'greeting') {
+        element = document.querySelector('.greeting-container');
+    }
+    if (value === 'off') {
+        element.classList.add('closed');
+    } else {
+        element.classList.remove('closed');
+    }
+}

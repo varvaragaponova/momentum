@@ -32,6 +32,10 @@ body {
   padding: 20px;
 }
 
+.player {
+  transition: all 0.5s;
+}
+
 .player-controls {
   display: flex;
   align-items: center;
@@ -229,6 +233,12 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   width: 180px;
   min-height: 180px;
   text-align: left;
+  transition: all 0.5s;
+}
+
+.closed {
+  opacity: 0;
+  transition: all 0.5s;
 }
 
 .weather-error {
@@ -315,12 +325,14 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   font-family: 'Arial-MT';
   font-size: 100px;
   letter-spacing: -4px;
+  transition: all 0.5s;
 }
 
 .date {
   min-height: 28px;
   font-size: 24px;
   margin-bottom: 20px;
+  transition: all 0.5s;
 }
 
 .greeting-container {
@@ -366,6 +378,10 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   height: 30vh;
   min-height: 160px;
   padding: 20px;
+}
+
+.quote-container {
+  transition: all 0.5s;
 }
 
 .change-quote {
