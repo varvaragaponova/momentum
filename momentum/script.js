@@ -27,6 +27,8 @@ const nameSounds = document.querySelector('.music-play');
 const inputRange = document.querySelector('input[type="range"]');
 const volumeButton = document.querySelector('.volume');
 const volumeSlider = document.querySelector('.volume-slider');
+const settingButton = document.querySelector('.settings');
+const settingWindow = document.querySelector('.settings-info');
 
 let audio;
 let playNum = 0;
@@ -40,6 +42,7 @@ const sounds = [
 
 let randomNum;
 let quotesArr = [];
+let language = 'en';
 
 window.addEventListener('beforeunload', () => {
     setLocalStorage();
@@ -96,8 +99,17 @@ showTime();
 function showDate() {
     const date = new Date();
     const options = { weekday: 'long', month: 'long', day: 'numeric' };
-    const currentDate = date.toLocaleDateString('en-US', options);
-    dateElement.textContent = `${currentDate}`;
+    const dateLang = language === 'en' ? 'en-US' : 'ru-RU';
+    const currentDate = date.toLocaleDateString(dateLang, options);
+    if (language === 'ru') {
+        const capitalizedDate = currentDate.split(',').map((el, idx) => {
+            if (idx === 0) return el[0].toUpperCase() + el.slice(1);
+            return el;
+        }).join(',');
+        dateElement.textContent = capitalizedDate;
+    } else {
+        dateElement.textContent = `${currentDate}`;
+    }
 }
 
 //Greeting
@@ -109,7 +121,7 @@ function showGreeting() {
 function getTimeOfDay() {
     const date = new Date();
     const hours = date.getHours();
-    const arrTimeOfDay = ['night', 'morning', 'afternoon', 'evening',];
+    const arrTimeOfDay = ['night', 'morning', 'afternoon', 'evening'];
     const timeNow = Math.floor(hours / 6);
     return arrTimeOfDay[timeNow];
 }
@@ -183,8 +195,16 @@ async function getWeather(e) {
         cityName = e.target.value
     }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
-    const res = await fetch(url);
+    const url = () => {
+        if(!language) {
+            return `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=ru&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
+        } else {
+            return `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
+        }
+    }
+
+    //const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
+    const res = await fetch(url());
     const data = await res.json();
 
     if (!res.ok) {
@@ -296,6 +316,7 @@ function playPauseAudio(e, indexFromPlayList) {
         player.classList.remove('play');
     } else {
         audio.pause();
+        buttons[playNum].classList.remove('pause-mini');
         player.classList.remove('pause');
         player.classList.add('play');
     }
@@ -360,3 +381,60 @@ function getTimeCodeFromNum(num) {
 
     return `${String(minutes).padStart(2, 0)}:${String(seconds).padStart(2, 0)}`
 }
+
+//Translation
+
+const translation = {
+    ru: {
+        greeting: ["Доброй ночи", "Доброе утро", "Добрый день", "Добрый вечер"],
+        weather: "Погода",
+        time: "Время",
+        date: "Дата",
+        quote: "Цитата",
+        player: "Плеер",
+        language: "Язык",
+        picture: "Изображение",
+        on: "Вкл",
+        off: "Выкл",
+        english: "Английский",
+        russian: "Русский",
+    },
+    eng: {
+        greeting: ["Good night", "Good morning", "Good afternoon", "Good evening"],
+        weather: "Weather",
+        time: "Time",
+        date: "Date",
+        quote: "Quote",
+        player: "Player",
+        language: "Language",
+        picture: "Picture",
+        on: "On",
+        off: "Off",
+        english: "English",
+        russian: "Russian",
+    }
+}
+
+//Setting
+
+settingButton.addEventListener('click', (e) => {
+    settingWindow.classList.toggle('open');
+    e.stopPropagation();
+})
+
+body.addEventListener('click', (e) => {
+    const withinWindow = e.composedPath().includes(settingWindow);
+
+    if (!withinWindow) {
+        settingWindow.classList.remove('open');
+    }
+})
+
+//Translate
+settingWindow.addEventListener('click', ({ target: { id, value } }) => {
+    if (id === 'languageClose' || id === 'languageOpen') {
+        language = value;
+        showDate();
+        getWeather();
+    }
+})

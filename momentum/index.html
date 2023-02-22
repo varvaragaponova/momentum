@@ -26,7 +26,7 @@
         </div>
         <span class="time-music-all">00:00</span>
         <button class="volume"></button>
-        <input type="range" class="volume-slider" max="100" value="100" step="1">
+        <input type="range" class="volume-slider" max="100" value="50" step="1">
       </div>
       <ul class="play-list"></ul>
     </div>
@@ -56,10 +56,119 @@
     </div>
   </main>
   <footer class="footer">
-    <button class="change-quote"></button>
-    <div>
-      <div class="quote"></div>
-      <div class="author"></div>
+    <button class="settings"></button>
+    <div class="settings-info">
+
+      <div class="radio-container">
+        <span>Weather:</span>
+        <div class="wrapper">
+          <div class="form open">
+            <input type="radio" id="weatherOpen" name="weather" value="on" checked>
+            <label for="weatherOpen">On</label>
+          </div>
+          <div class="form close">
+            <input type="radio" id="weatherClose" name="weather" value="off">
+            <label for="weatherClose">Off</label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="radio-container">
+        <span>Time:</span>
+        <div class="wrapper">
+          <div class="form open">
+            <input type="radio" id="timeOpen" name="time" value="on" checked>
+            <label for="timeOpen">On</label>
+          </div>
+          <div class="form close">
+            <input type="radio" id="timeClose" name="time" value="off">
+            <label for="timeClose">Off</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="radio-container">
+        <span>Date:</span>
+        <div class="wrapper">
+          <div class="form open">
+            <input type="radio" id="dateOpen" name="date" value="on" checked>
+            <label for="dateOpen">On</label>
+          </div>
+          <div class="form close">
+            <input type="radio" id="dateClose" name="date" value="off">
+            <label for="dateClose">Off</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="radio-container">
+        <span>Quote:</span>
+        <div class="wrapper">
+          <div class="form open">
+            <input type="radio" id="quoteOpen" name="quote" value="on" checked>
+            <label for="quoteOpen">On</label>
+          </div>
+          <div class="form close">
+            <input type="radio" id="quoteClose" name="quote" value="off">
+            <label for="quoteClose">Off</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="radio-container">
+        <span>Player:</span>
+        <div class="wrapper">
+          <div class="form open">
+            <input type="radio" id="playerOpen" name="player" value="on" checked>
+            <label for="playerOpen">On</label>
+          </div>
+          <div class="form close">
+            <input type="radio" id="playerClose" name="player" value="off">
+            <label for="playerClose">Off</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="radio-container">
+        <span>Language:</span>
+        <div class="wrapper">
+          <div class="form language open">
+            <input type="radio" id="languageOpen" name="language" value="en" checked>
+            <label for="languageOpen">English</label>
+          </div>
+          <div class="form language close">
+            <input type="radio" id="languageClose" name="language" value="ru">
+            <label for="languageClose">Russian</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="radio-container">
+        <span>Picture:</span>
+        <div class="wrapper">
+          <div class="form picture git">
+            <input type="radio" id="pictureGit" name="picture" value="git" checked>
+            <label for="pictureGit">Git</label>
+          </div>
+          <div class="form picture unsplash">
+            <input type="radio" id="pictureApiUnsplash" name="picture" value="unsplash">
+            <label for="pictureApiUnsplash">Unsplash</label>
+          </div>
+          <div class="form picture flickr">
+            <input type="radio" id="pictureApiFlickr" name="picture" value="flickr">
+            <label for="pictureApiFlickr">Flickr</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="quote-container">
+      <button class="change-quote"></button>
+      <div>
+        <div class="quote"></div>
+        <div class="author"></div>
+      </div>
     </div>
   </footer>
   <script src="./script.js"></script>
