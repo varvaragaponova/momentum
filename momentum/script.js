@@ -195,22 +195,27 @@ async function getWeather(e) {
         cityName = e.target.value
     }
 
-    const url = () => {
-        if(!language) {
-            return `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=ru&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
-        } else {
-            return `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
-        }
+    let url;
+
+    if (language == 'en') {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
+    } else {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=ru&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
     }
 
     //const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=en&appid=3a2842b79c9835a04c1420c970a38e28&units=metric`;
-    const res = await fetch(url());
+    const res = await fetch(url);
     const data = await res.json();
 
     if (!res.ok) {
         city.classList.add('error');
         error.classList.add('open');
-        error.textContent = 'Please, enter the city again';
+        if (language === 'en') {
+            error.textContent = 'Please, enter the city again';
+        } else {
+            error.textContent = 'Пожалуйста, введите город ещё раз';
+        }
+
         showHideWeather(false);
         weather.style.justifyContent = 'flex-start';
     } else {
@@ -221,8 +226,13 @@ async function getWeather(e) {
         weatherIcon.classList.add(`owf-${data.weather[0].id}`);
         temperature.textContent = `${Math.round(data.main.temp)}°C`;
         weatherDescription.textContent = data.weather[0].description;
-        wind.textContent = `Wind speed: ${Math.round(data.wind.speed)} m/s`;
-        humidity.textContent = `Humidity: ${data.main.humidity}%`;
+        if (language === 'en') {
+            wind.textContent = `Wind speed: ${Math.round(data.wind.speed)} m/s`;
+            humidity.textContent = `Humidity: ${data.main.humidity}%`;
+        } else {
+            wind.textContent = `Скорость ветра: ${Math.round(data.wind.speed)} м/с`;
+            humidity.textContent = `Влажность: ${data.main.humidity}%`;
+        }
     }
 }
 
@@ -248,7 +258,13 @@ function setLocalStorageWeather() {
 }
 
 function getLocalStorageWeather() {
-    city.value = localStorage.getItem('city') || 'Minsk';
+    if (language === 'en') {
+        city.value = localStorage.getItem('city') || 'Minsk';
+        console.log(1);
+    } else {
+        city.value = localStorage.getItem('city') || 'Минск';
+        console.log(111);
+    }
 }
 
 //Quote of the Day
@@ -325,7 +341,7 @@ function playPauseAudio(e, indexFromPlayList) {
 }
 
 function playNext() {
-    if(audio.pause()) return;
+    if (audio.pause()) return;
 
     const buttons = document.querySelectorAll('li button');
 
@@ -349,7 +365,7 @@ function playNext() {
 }
 
 function playPrev() {
-    if(audio.pause()) return;
+    if (audio.pause()) return;
 
     const buttons = document.querySelectorAll('li button');
 
@@ -436,5 +452,6 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
         language = value;
         showDate();
         getWeather();
+        getLocalStorageWeather();
     }
 })
