@@ -82,6 +82,7 @@ const sounds = [
 let randomNum;
 let quotesArr = [];
 let language = 'en';
+let selectedImageAPI = 'git';
 
 window.addEventListener('beforeunload', () => {
     setLocalStorage();
@@ -202,9 +203,21 @@ function getRandomNum(min, max, isRandomizePicture) {
 function setBg() {
     const timeForPicture = getTimeOfDay();
     getRandomNum(1, 20, true);
-    return `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
+    let urlPicture;
+    if (selectedImageAPI === 'git') {
+        urlPicture = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
+    } else if (selectedImageAPI === 'unsplash') {
+        let url = `https://api.unsplash.com/photos/random?query=${timeForPicture}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                urlPicture = data.urls.regular;
+                body.style.backgroundImage = `url(${urlPicture})`;
+            });
+        return;
+    }
+    return urlPicture;
 }
-
 //Slider
 
 function getSlideNext() {
@@ -215,7 +228,21 @@ function getSlideNext() {
         randomNum += 1;
     }
 
-    let newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    let newUrl;
+
+    if (selectedImageAPI === 'git') {
+        newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    } else if (selectedImageAPI === 'unsplash') {
+        newUrl = `https://api.unsplash.com/photos/random?query=${getTimeOfDay()}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        fetch(newUrl)
+            .then(res => res.json())
+            .then(data => {
+                newUrl = data.urls.regular;
+                body.style.backgroundImage = `url(${newUrl})`;
+            });
+        return;
+    }
+
     const img = new Image();
     img.src = newUrl;
     img.onload = () => {
@@ -230,7 +257,21 @@ function getSlidePrev() {
         +randomNum--;
     }
 
-    let newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    let newUrl;
+
+    if (selectedImageAPI === 'git') {
+        newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+    } else if (selectedImageAPI === 'unsplash') {
+        newUrl = `https://api.unsplash.com/photos/random?query=${getTimeOfDay()}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        fetch(newUrl)
+            .then(res => res.json())
+            .then(data => {
+                newUrl = data.urls.regular;
+                body.style.backgroundImage = `url(${newUrl})`;
+            });
+        return;
+    }
+
     const img = new Image();
     img.src = newUrl;
     img.onload = () => {
@@ -534,6 +575,21 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
         getLocalStorageWeather(isFromTranslation);
         showGreeting();
         settingsTranslate();
+    }
+
+    if(id === 'pictureGit') {
+        selectedImageAPI = value;
+        body.style.backgroundImage = `url(${setBg()})`;
+    }
+
+    if (id === 'pictureApiUnsplash') {
+        selectedImageAPI = value;
+        setBg();
+    }
+
+    if(id === 'pictureApiFlickr') {
+        selectedImageAPI = value;
+        setBg();
     }
 
     if (elementsIds.includes(id)) showHideWidget(id);
