@@ -215,6 +215,15 @@ function setBg() {
                 body.style.backgroundImage = `url(${urlPicture})`;
             });
         return;
+    } else if (selectedImageAPI === 'flickr') {
+        let url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${timeForPicture}&extras=url_l&format=json&nojsoncallback=1`;
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                urlPicture = data.photos.photo[getRandomNum(0, 100)].url_l;
+                body.style.backgroundImage = `url(${urlPicture})`;
+            });
+        return;
     }
     return urlPicture;
 }
@@ -238,6 +247,15 @@ function getSlideNext() {
             .then(res => res.json())
             .then(data => {
                 newUrl = data.urls.regular;
+                body.style.backgroundImage = `url(${newUrl})`;
+            });
+        return;
+    } else if (selectedImageAPI === 'flickr') {
+        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTimeOfDay()}&extras=url_l&format=json&nojsoncallback=1`;
+        fetch(newUrl)
+            .then(res => res.json())
+            .then(data => {
+                newUrl = data.photos.photo[getRandomNum(0, 100)].url_l;
                 body.style.backgroundImage = `url(${newUrl})`;
             });
         return;
@@ -267,6 +285,15 @@ function getSlidePrev() {
             .then(res => res.json())
             .then(data => {
                 newUrl = data.urls.regular;
+                body.style.backgroundImage = `url(${newUrl})`;
+            });
+        return;
+    } else if (selectedImageAPI === 'flickr') {
+        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTimeOfDay(z)}&extras=url_l&format=json&nojsoncallback=1`;
+        fetch(newUrl)
+            .then(res => res.json())
+            .then(data => {
+                newUrl = data.photos.photo[getRandomNum(0, 100)].url_l;
                 body.style.backgroundImage = `url(${newUrl})`;
             });
         return;
