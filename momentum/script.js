@@ -30,7 +30,11 @@ const volumeButton = document.querySelector('.volume');
 const volumeSlider = document.querySelector('.volume-slider');
 const settingButton = document.querySelector('.settings');
 const settingWindow = document.querySelector('.settings-info');
-const radioButtonSetting = document.querySelectorAll('input[type="radio"]');
+const radioButtonSetting = document.querySelectorAll('.radio-container');
+const textSettings = document.querySelectorAll('.for-translate');
+const settingButtonsOn = document.querySelectorAll('.on');
+const settingButtonsOff = document.querySelectorAll('.off');
+const settingLanguage = document.querySelectorAll('.language-value');
 
 const translation = {
     ru: {
@@ -462,6 +466,62 @@ body.addEventListener('click', (e) => {
     }
 })
 
+function settingsTranslate() {
+  if (language === 'en') {
+    textSettings[0].textContent = `${translation.eng.weather}`;
+    textSettings[1].textContent = `${translation.eng.time}`;
+    textSettings[2].textContent = `${translation.eng.date}`;
+    textSettings[3].textContent = `${translation.eng.greeting}`;
+    textSettings[4].textContent = `${translation.eng.quote}`;
+    textSettings[5].textContent = `${translation.eng.player}`;
+    textSettings[6].textContent = `${translation.eng.language}`;
+    textSettings[7].textContent = `${translation.eng.picture}`;
+
+    settingButtonsOn[0].textContent = `${translation.eng.on}`;
+    settingButtonsOn[1].textContent = `${translation.eng.on}`;
+    settingButtonsOn[2].textContent = `${translation.eng.on}`;
+    settingButtonsOn[3].textContent = `${translation.eng.on}`;
+    settingButtonsOn[4].textContent = `${translation.eng.on}`;
+    settingButtonsOn[5].textContent = `${translation.eng.on}`;
+
+    settingButtonsOff[0].textContent = `${translation.eng.off}`;
+    settingButtonsOff[1].textContent = `${translation.eng.off}`;
+    settingButtonsOff[2].textContent = `${translation.eng.off}`;
+    settingButtonsOff[3].textContent = `${translation.eng.off}`;
+    settingButtonsOff[4].textContent = `${translation.eng.off}`;
+    settingButtonsOff[5].textContent = `${translation.eng.off}`;
+
+    settingLanguage[0].textContent = `${translation.eng.english}`;
+    settingLanguage[1].textContent = `${translation.eng.russian}`;
+  } else {
+    textSettings[0].textContent = `${translation.ru.weather}`;
+    textSettings[1].textContent = `${translation.ru.time}`;
+    textSettings[2].textContent = `${translation.ru.date}`;
+    textSettings[3].textContent = `${translation.ru.greeting}`;
+    textSettings[4].textContent = `${translation.ru.quote}`;
+    textSettings[5].textContent = `${translation.ru.player}`;
+    textSettings[6].textContent = `${translation.ru.language}`;
+    textSettings[7].textContent = `${translation.ru.picture}`;
+
+    settingButtonsOn[0].textContent = `${translation.ru.on}`;
+    settingButtonsOn[1].textContent = `${translation.ru.on}`;
+    settingButtonsOn[2].textContent = `${translation.ru.on}`;
+    settingButtonsOn[3].textContent = `${translation.ru.on}`;
+    settingButtonsOn[4].textContent = `${translation.ru.on}`;
+    settingButtonsOn[5].textContent = `${translation.ru.on}`;
+
+    settingButtonsOff[0].textContent = `${translation.ru.off}`;
+    settingButtonsOff[1].textContent = `${translation.ru.off}`;
+    settingButtonsOff[2].textContent = `${translation.ru.off}`;
+    settingButtonsOff[3].textContent = `${translation.ru.off}`;
+    settingButtonsOff[4].textContent = `${translation.ru.off}`;
+    settingButtonsOff[5].textContent = `${translation.ru.off}`;
+
+    settingLanguage[0].textContent = `${translation.ru.english}`;
+    settingLanguage[1].textContent = `${translation.ru.russian}`;
+  }
+}
+
 settingWindow.addEventListener('click', ({ target: { id, value } }) => {
     const elementsIds = ['weatherOpen', 'weatherClose', 'timeOpen', 'timeClose', 'dateOpen', 'dateClose', 'greetingOpen', 'greetingClose', 'quoteOpen', 'quoteClose', 'playerOpen', 'playerClose'];
 
@@ -473,6 +533,7 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
         getWeather();
         getLocalStorageWeather(isFromTranslation);
         showGreeting();
+        settingsTranslate();
     }
 
     if (elementsIds.includes(id)) showHideWidget(id);
