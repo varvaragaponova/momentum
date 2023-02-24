@@ -409,23 +409,21 @@ async function getQuotes() {
                 'Content-Type': 'application/json'
             })
         })
-        .then(res => {
-            return res.text();
-        })
-        .then(resText => {
-            if (resText) {
-                console.log('Text: ', resText);
-                return JSON.parse(resText)
-            }
-            return null;
-        })
-        .then(data => {
-            if (data) {
-                console.log('Response: ', data);
-                quotePhrase.textContent = data.quoteText;
-                author.textContent = data.quoteAuthor || 'Неизвестный';
-            }
-        })
+            .then(res => {
+                return res.text();
+            })
+            .then(resText => {
+                if (resText) {
+                    return JSON.parse(resText)
+                }
+                return null;
+            })
+            .then(data => {
+                if (data) {
+                    quotePhrase.textContent = data.quoteText;
+                    author.textContent = data.quoteAuthor || 'Неизвестный';
+                }
+            })
     }
 }
 
@@ -562,59 +560,23 @@ body.addEventListener('click', (e) => {
 })
 
 function settingsTranslate() {
-    if (language === 'en') {
-        textSettings[0].textContent = `${translation.eng.weather}`;
-        textSettings[1].textContent = `${translation.eng.time}`;
-        textSettings[2].textContent = `${translation.eng.date}`;
-        textSettings[3].textContent = `${translation.eng.greeting}`;
-        textSettings[4].textContent = `${translation.eng.quote}`;
-        textSettings[5].textContent = `${translation.eng.player}`;
-        textSettings[6].textContent = `${translation.eng.language}`;
-        textSettings[7].textContent = `${translation.eng.picture}`;
+    const settingKeys = ['weather', 'time', 'date', 'greeting', 'quote', 'player', 'language', 'picture'];
 
-        settingButtonsOn[0].textContent = `${translation.eng.on}`;
-        settingButtonsOn[1].textContent = `${translation.eng.on}`;
-        settingButtonsOn[2].textContent = `${translation.eng.on}`;
-        settingButtonsOn[3].textContent = `${translation.eng.on}`;
-        settingButtonsOn[4].textContent = `${translation.eng.on}`;
-        settingButtonsOn[5].textContent = `${translation.eng.on}`;
+    textSettings.forEach((label, index) => {
+        label.textContent = translation[language === 'en' ? 'eng' : 'ru'][settingKeys[index]];
+    });
 
-        settingButtonsOff[0].textContent = `${translation.eng.off}`;
-        settingButtonsOff[1].textContent = `${translation.eng.off}`;
-        settingButtonsOff[2].textContent = `${translation.eng.off}`;
-        settingButtonsOff[3].textContent = `${translation.eng.off}`;
-        settingButtonsOff[4].textContent = `${translation.eng.off}`;
-        settingButtonsOff[5].textContent = `${translation.eng.off}`;
+    settingButtonsOn.forEach((btn) => {
+        btn.textContent = translation[language === 'en' ? 'eng' : 'ru'].on;
+    });
 
-        settingLanguage[0].textContent = `${translation.eng.english}`;
-        settingLanguage[1].textContent = `${translation.eng.russian}`;
-    } else {
-        textSettings[0].textContent = `${translation.ru.weather}`;
-        textSettings[1].textContent = `${translation.ru.time}`;
-        textSettings[2].textContent = `${translation.ru.date}`;
-        textSettings[3].textContent = `${translation.ru.greeting}`;
-        textSettings[4].textContent = `${translation.ru.quote}`;
-        textSettings[5].textContent = `${translation.ru.player}`;
-        textSettings[6].textContent = `${translation.ru.language}`;
-        textSettings[7].textContent = `${translation.ru.picture}`;
+    settingButtonsOff.forEach((btn) => {
+        btn.textContent = translation[language === 'en' ? 'eng' : 'ru'].off;
+    });
 
-        settingButtonsOn[0].textContent = `${translation.ru.on}`;
-        settingButtonsOn[1].textContent = `${translation.ru.on}`;
-        settingButtonsOn[2].textContent = `${translation.ru.on}`;
-        settingButtonsOn[3].textContent = `${translation.ru.on}`;
-        settingButtonsOn[4].textContent = `${translation.ru.on}`;
-        settingButtonsOn[5].textContent = `${translation.ru.on}`;
+    settingLanguage[0].textContent = `${translation[language === 'en' ? 'eng' : 'ru'].english}`;
 
-        settingButtonsOff[0].textContent = `${translation.ru.off}`;
-        settingButtonsOff[1].textContent = `${translation.ru.off}`;
-        settingButtonsOff[2].textContent = `${translation.ru.off}`;
-        settingButtonsOff[3].textContent = `${translation.ru.off}`;
-        settingButtonsOff[4].textContent = `${translation.ru.off}`;
-        settingButtonsOff[5].textContent = `${translation.ru.off}`;
-
-        settingLanguage[0].textContent = `${translation.ru.english}`;
-        settingLanguage[1].textContent = `${translation.ru.russian}`;
-    }
+    settingLanguage[1].textContent = `${translation[language === 'en' ? 'eng' : 'ru'].russian}`;
 }
 
 settingWindow.addEventListener('click', ({ target: { id, value } }) => {
