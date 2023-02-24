@@ -36,6 +36,10 @@ const settingButtonsOn = document.querySelectorAll('.on');
 const settingButtonsOff = document.querySelectorAll('.off');
 const settingsButtonsArr = document.querySelectorAll('input[type="radio"]')
 const settingLanguage = document.querySelectorAll('.language-value');
+const todoButton = document.querySelector('.todo');
+const todoWindow = document.querySelector('.todo-container');
+const todoList = document.querySelector('.todo-list');
+const textForTodoItem = document.querySelector('.todo-text');
 
 const translation = {
     ru: {
@@ -96,7 +100,6 @@ window.addEventListener('load', () => {
     getQuotes();
     body.style.backgroundImage = `url(${setBg()})`;
 
-
     sounds.forEach((song, index) => {
         const li = document.createElement('li');
         const span = document.createElement('span');
@@ -123,6 +126,7 @@ buttonQuote.addEventListener('click', getQuotes);
 playerPlay.addEventListener('click', playPauseAudio);
 nextPlayer.addEventListener('click', playNext);
 prevPlayer.addEventListener('click', playPrev);
+textForTodoItem.addEventListener('change', onItemAdd);
 
 //Date and time
 
@@ -627,4 +631,62 @@ function showHideWidget(targetId) {
     } else {
         element.classList.remove('closed');
     }
+}
+
+//Todo
+
+todoButton.addEventListener('click', (e) => {
+    todoWindow.classList.toggle('opened');
+    e.stopPropagation();
+})
+
+body.addEventListener('click', (e) => {
+    const withinWindow = e.composedPath().includes(todoWindow);
+
+    if (!withinWindow) {
+        todoWindow.classList.remove('opened');
+    }
+})
+
+const toDos = [];
+
+function createTodoList(todoName, index) {
+    const liTodoList = document.createElement('li');
+    liTodoList.classList.add('todo-item');
+
+    const textForStep = document.createElement("label");
+    const step = document.createElement("input");
+    step.setAttribute("type", "checkbox");
+    const labelText = document.createTextNode(' ' + todoName);
+    textForStep.appendChild(step);
+    textForStep.appendChild(labelText);
+    liTodoList.appendChild(textForStep);
+
+    const buttonDeleteStep = document.createElement("button");
+    buttonDeleteStep.classList.add('delete');
+
+    buttonDeleteStep.addEventListener('click', () => deleteItem(index));
+    liTodoList.appendChild(buttonDeleteStep);
+
+    todoList.appendChild(liTodoList);
+}
+
+function renderTodo() {
+    todoList.innerHTML = '';
+    toDos.forEach((todoName, index) => {
+        createTodoList(todoName, index);
+    })
+}
+
+function onItemAdd({ target }) {
+    if (!target.value.trim()) return;
+    toDos.push(target.value);
+    target.value = '';
+
+    renderTodo()
+}
+
+function deleteItem(index) {
+    toDos.splice(index);
+    renderTodo()
 }

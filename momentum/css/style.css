@@ -481,6 +481,80 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   background-color: #14a014;
 }
 
+.todo {
+  position: absolute;
+  right: 25px;
+  bottom: 10px;
+  width: 50px;
+  height: 25px;
+  color: rgba(265, 265, 265, 0.8);
+}
+
+.todo:hover {
+  cursor: pointer;
+  color:rgba(265, 265, 265, 1);
+}
+
+.todo-container {
+  position: absolute;
+  display: flex;
+  opacity: 0;
+  min-width: 250px;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  right: 25px;
+  bottom: 50px;
+  padding: 15px 20px;
+  color:rgba(0, 0, 0, 1);
+  border-radius: 10px;
+  background-color: rgb(265, 265, 265);
+  transition: all 0.5s;
+}
+
+.todo-container.opened {
+  opacity: 1;
+  transition: all 0.5s;
+}
+
+.todo-list {
+  position: relative;
+  text-align: start;
+  width: 100%;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.todo-text {
+  width: 100%;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  outline: none;
+}
+
+.forItemTodo {
+  display: block;
+}
+
+.delete {
+  background-color: transparent;
+  border: none;
+  background-image: url('../assets/svg/cancel-close-cross-delete_114048.svg');
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+}
+
+.delete:hover {
+  cursor: pointer;
+  background-size: 18px 18px;
+}
+
 @media (max-width: 768px) {
   .time {
     min-height: 80px;
