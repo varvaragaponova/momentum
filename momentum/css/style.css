@@ -343,6 +343,7 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   min-height: 48px;
   width: 100vw;
   font-size: 40px;
+  transition: all 0.5s;
 }
 
 .greeting {

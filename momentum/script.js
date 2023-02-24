@@ -34,11 +34,12 @@ const radioButtonSetting = document.querySelectorAll('.radio-container');
 const textSettings = document.querySelectorAll('.for-translate');
 const settingButtonsOn = document.querySelectorAll('.on');
 const settingButtonsOff = document.querySelectorAll('.off');
+const settingsButtonsArr = document.querySelectorAll('input[type="radio"]')
 const settingLanguage = document.querySelectorAll('.language-value');
 
 const translation = {
     ru: {
-        greetingDay: ["Доброй ночи", "Доброе утро", "Добрый день", "Добрый вечер"],
+        greetingDay: ["Доброй ночи, ", "Доброе утро, ", "Добрый день, ", "Добрый вечер, "],
         weather: "Погода",
         time: "Время",
         date: "Дата",
@@ -80,7 +81,6 @@ const sounds = [
 ]
 
 let randomNum;
-let quotesArr = [];
 let language = 'en';
 let selectedImageAPI = 'git';
 
@@ -131,7 +131,7 @@ function showTime() {
     time.textContent = `${currentTime}`;
     showDate();
     showGreeting();
-    setTimeout(showTime, 1000);
+    setTimeout(showTime, 2000);
 }
 
 showTime();
@@ -156,7 +156,7 @@ function showDate() {
 
 function showGreeting() {
     if (language === 'en') {
-        greeting.textContent = `Good ${getTimeOfDay()}`;
+        greeting.textContent = `Good ${getTimeOfDay()}, `;
     } else {
         greeting.textContent = `${getTimeOfDay()}`;
     }
@@ -289,7 +289,7 @@ function getSlidePrev() {
             });
         return;
     } else if (selectedImageAPI === 'flickr') {
-        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTimeOfDay(z)}&extras=url_l&format=json&nojsoncallback=1`;
+        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTimeOfDay()}&extras=url_l&format=json&nojsoncallback=1`;
         fetch(newUrl)
             .then(res => res.json())
             .then(data => {
@@ -377,7 +377,7 @@ function setLocalStorageWeather() {
 
 function getLocalStorageWeather(isFromTranslation) {
 
-    if(isFromTranslation) {
+    if (isFromTranslation) {
         if (city.value !== 'Minsk' && city.value !== 'Минск') return;
     }
 
@@ -390,16 +390,14 @@ function getLocalStorageWeather(isFromTranslation) {
 
 //Quote of the Day
 
+
 async function getQuotes() {
-    if (!quotesArr.length) {
-        const quotes = 'https://dummyjson.com/quotes';
-        const res = await fetch(quotes);
-        const data = await res.json();
-        quotesArr = data.quotes;
-    }
-    let numberForQuotes = getRandomNum(1, quotesArr.length);
-    quotePhrase.textContent = quotesArr[numberForQuotes - 1].quote;
-    author.textContent = quotesArr[numberForQuotes - 1].author;
+    const quotes = `https://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&lang=${language}&format=json`;
+    const res = await fetch(quotes);
+    const data = await res.json();
+
+    quotePhrase.textContent = data.quoteText;
+    author.textContent = data.quoteAuthor || (language === 'en' ? 'Unknown' : 'Неизвестный');
 }
 
 //Audio
@@ -535,59 +533,59 @@ body.addEventListener('click', (e) => {
 })
 
 function settingsTranslate() {
-  if (language === 'en') {
-    textSettings[0].textContent = `${translation.eng.weather}`;
-    textSettings[1].textContent = `${translation.eng.time}`;
-    textSettings[2].textContent = `${translation.eng.date}`;
-    textSettings[3].textContent = `${translation.eng.greeting}`;
-    textSettings[4].textContent = `${translation.eng.quote}`;
-    textSettings[5].textContent = `${translation.eng.player}`;
-    textSettings[6].textContent = `${translation.eng.language}`;
-    textSettings[7].textContent = `${translation.eng.picture}`;
+    if (language === 'en') {
+        textSettings[0].textContent = `${translation.eng.weather}`;
+        textSettings[1].textContent = `${translation.eng.time}`;
+        textSettings[2].textContent = `${translation.eng.date}`;
+        textSettings[3].textContent = `${translation.eng.greeting}`;
+        textSettings[4].textContent = `${translation.eng.quote}`;
+        textSettings[5].textContent = `${translation.eng.player}`;
+        textSettings[6].textContent = `${translation.eng.language}`;
+        textSettings[7].textContent = `${translation.eng.picture}`;
 
-    settingButtonsOn[0].textContent = `${translation.eng.on}`;
-    settingButtonsOn[1].textContent = `${translation.eng.on}`;
-    settingButtonsOn[2].textContent = `${translation.eng.on}`;
-    settingButtonsOn[3].textContent = `${translation.eng.on}`;
-    settingButtonsOn[4].textContent = `${translation.eng.on}`;
-    settingButtonsOn[5].textContent = `${translation.eng.on}`;
+        settingButtonsOn[0].textContent = `${translation.eng.on}`;
+        settingButtonsOn[1].textContent = `${translation.eng.on}`;
+        settingButtonsOn[2].textContent = `${translation.eng.on}`;
+        settingButtonsOn[3].textContent = `${translation.eng.on}`;
+        settingButtonsOn[4].textContent = `${translation.eng.on}`;
+        settingButtonsOn[5].textContent = `${translation.eng.on}`;
 
-    settingButtonsOff[0].textContent = `${translation.eng.off}`;
-    settingButtonsOff[1].textContent = `${translation.eng.off}`;
-    settingButtonsOff[2].textContent = `${translation.eng.off}`;
-    settingButtonsOff[3].textContent = `${translation.eng.off}`;
-    settingButtonsOff[4].textContent = `${translation.eng.off}`;
-    settingButtonsOff[5].textContent = `${translation.eng.off}`;
+        settingButtonsOff[0].textContent = `${translation.eng.off}`;
+        settingButtonsOff[1].textContent = `${translation.eng.off}`;
+        settingButtonsOff[2].textContent = `${translation.eng.off}`;
+        settingButtonsOff[3].textContent = `${translation.eng.off}`;
+        settingButtonsOff[4].textContent = `${translation.eng.off}`;
+        settingButtonsOff[5].textContent = `${translation.eng.off}`;
 
-    settingLanguage[0].textContent = `${translation.eng.english}`;
-    settingLanguage[1].textContent = `${translation.eng.russian}`;
-  } else {
-    textSettings[0].textContent = `${translation.ru.weather}`;
-    textSettings[1].textContent = `${translation.ru.time}`;
-    textSettings[2].textContent = `${translation.ru.date}`;
-    textSettings[3].textContent = `${translation.ru.greeting}`;
-    textSettings[4].textContent = `${translation.ru.quote}`;
-    textSettings[5].textContent = `${translation.ru.player}`;
-    textSettings[6].textContent = `${translation.ru.language}`;
-    textSettings[7].textContent = `${translation.ru.picture}`;
+        settingLanguage[0].textContent = `${translation.eng.english}`;
+        settingLanguage[1].textContent = `${translation.eng.russian}`;
+    } else {
+        textSettings[0].textContent = `${translation.ru.weather}`;
+        textSettings[1].textContent = `${translation.ru.time}`;
+        textSettings[2].textContent = `${translation.ru.date}`;
+        textSettings[3].textContent = `${translation.ru.greeting}`;
+        textSettings[4].textContent = `${translation.ru.quote}`;
+        textSettings[5].textContent = `${translation.ru.player}`;
+        textSettings[6].textContent = `${translation.ru.language}`;
+        textSettings[7].textContent = `${translation.ru.picture}`;
 
-    settingButtonsOn[0].textContent = `${translation.ru.on}`;
-    settingButtonsOn[1].textContent = `${translation.ru.on}`;
-    settingButtonsOn[2].textContent = `${translation.ru.on}`;
-    settingButtonsOn[3].textContent = `${translation.ru.on}`;
-    settingButtonsOn[4].textContent = `${translation.ru.on}`;
-    settingButtonsOn[5].textContent = `${translation.ru.on}`;
+        settingButtonsOn[0].textContent = `${translation.ru.on}`;
+        settingButtonsOn[1].textContent = `${translation.ru.on}`;
+        settingButtonsOn[2].textContent = `${translation.ru.on}`;
+        settingButtonsOn[3].textContent = `${translation.ru.on}`;
+        settingButtonsOn[4].textContent = `${translation.ru.on}`;
+        settingButtonsOn[5].textContent = `${translation.ru.on}`;
 
-    settingButtonsOff[0].textContent = `${translation.ru.off}`;
-    settingButtonsOff[1].textContent = `${translation.ru.off}`;
-    settingButtonsOff[2].textContent = `${translation.ru.off}`;
-    settingButtonsOff[3].textContent = `${translation.ru.off}`;
-    settingButtonsOff[4].textContent = `${translation.ru.off}`;
-    settingButtonsOff[5].textContent = `${translation.ru.off}`;
+        settingButtonsOff[0].textContent = `${translation.ru.off}`;
+        settingButtonsOff[1].textContent = `${translation.ru.off}`;
+        settingButtonsOff[2].textContent = `${translation.ru.off}`;
+        settingButtonsOff[3].textContent = `${translation.ru.off}`;
+        settingButtonsOff[4].textContent = `${translation.ru.off}`;
+        settingButtonsOff[5].textContent = `${translation.ru.off}`;
 
-    settingLanguage[0].textContent = `${translation.ru.english}`;
-    settingLanguage[1].textContent = `${translation.ru.russian}`;
-  }
+        settingLanguage[0].textContent = `${translation.ru.english}`;
+        settingLanguage[1].textContent = `${translation.ru.russian}`;
+    }
 }
 
 settingWindow.addEventListener('click', ({ target: { id, value } }) => {
@@ -602,9 +600,10 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
         getLocalStorageWeather(isFromTranslation);
         showGreeting();
         settingsTranslate();
+        getQuotes();
     }
 
-    if(id === 'pictureGit') {
+    if (id === 'pictureGit') {
         selectedImageAPI = value;
         body.style.backgroundImage = `url(${setBg()})`;
     }
@@ -614,7 +613,7 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
         setBg();
     }
 
-    if(id === 'pictureApiFlickr') {
+    if (id === 'pictureApiFlickr') {
         selectedImageAPI = value;
         setBg();
     }
