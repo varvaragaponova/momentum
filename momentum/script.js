@@ -81,6 +81,7 @@ const sounds = [
 ]
 
 let randomNum;
+let quotesArr = [];
 let language = 'en';
 let selectedImageAPI = 'git';
 
@@ -390,14 +391,42 @@ function getLocalStorageWeather(isFromTranslation) {
 
 //Quote of the Day
 
-
 async function getQuotes() {
-    const quotes = `https://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&lang=${language}&format=json`;
-    const res = await fetch(quotes);
-    const data = await res.json();
-
-    quotePhrase.textContent = data.quoteText;
-    author.textContent = data.quoteAuthor || (language === 'en' ? 'Unknown' : 'Неизвестный');
+    if (language === 'en') {
+        if (!quotesArr.length) {
+            const quotes = 'https://dummyjson.com/quotes';
+            const res = await fetch(quotes);
+            const data = await res.json();
+            quotesArr = data.quotes;
+        }
+        let numberForQuotes = getRandomNum(1, quotesArr.length);
+        quotePhrase.textContent = quotesArr[numberForQuotes - 1].quote;
+        author.textContent = quotesArr[numberForQuotes - 1].author;
+    } else {
+        const quotes = `https://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&lang=ru&format=json`;
+        await fetch(quotes, {
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        })
+        .then(res => {
+            return res.text();
+        })
+        .then(resText => {
+            if (resText) {
+                console.log('Text: ', resText);
+                return JSON.parse(resText)
+            }
+            return null;
+        })
+        .then(data => {
+            if (data) {
+                console.log('Response: ', data);
+                quotePhrase.textContent = data.quoteText;
+                author.textContent = data.quoteAuthor || 'Неизвестный';
+            }
+        })
+    }
 }
 
 //Audio

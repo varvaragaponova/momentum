@@ -213,7 +213,6 @@ input[type=range]:not(.volume-slider)::-moz-range-track {
     background-color: #fff;
 }
 
-
 input[type=range]:not(.volume-slider)::-moz-range-thumb {
   background: #000;
   cursor: pointer;
