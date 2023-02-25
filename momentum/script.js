@@ -467,9 +467,9 @@ function getLocalStorageWeather(isFromTranslation) {
   }
 
   if (language === "en") {
-    city.value = localStorage.getItem("city") || "Minsk";
+    city.value =  "Minsk";
   } else {
-    city.value = localStorage.getItem("city") || "Минск";
+    city.value = "Минск";
   }
 }
 
@@ -885,7 +885,13 @@ function deleteTag(index) {
 // Save settings
 
 function getLocalStorageSettings() {
-  const settings = JSON.parse(localStorage.getItem("settings") || {});
+  const localStorageSettings = localStorage.getItem("settings");
+  let settings = {};
+  if (localStorageSettings) {
+    settings = JSON.parse(localStorageSettings);
+  } else {
+    return;
+  }
   Object.entries(settings).forEach(([key, value]) => {
     if (key === "toDos") {
       toDos = value;
