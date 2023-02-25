@@ -40,6 +40,11 @@ const todoButton = document.querySelector('.todo');
 const todoWindow = document.querySelector('.todo-container');
 const todoList = document.querySelector('.todo-list');
 const textForTodoItem = document.querySelector('.todo-text');
+const tagsInput = document.querySelector('.tags input');
+const tagsWrapper = document.querySelector('.tags');
+const tagsContainer = document.querySelector('.tags-container');
+const confirmTagsButton = document.querySelector('.tags-confirm');
+const todoTitle = document.querySelector('h3');
 
 const translation = {
     ru: {
@@ -86,8 +91,10 @@ const sounds = [
 
 let randomNum;
 let quotesArr = [];
+let imageTags = [];
 let language = 'en';
 let selectedImageAPI = 'git';
+let tagsQueryParams;
 
 window.addEventListener('beforeunload', () => {
     setLocalStorage();
@@ -127,6 +134,8 @@ playerPlay.addEventListener('click', playPauseAudio);
 nextPlayer.addEventListener('click', playNext);
 prevPlayer.addEventListener('click', playPrev);
 textForTodoItem.addEventListener('change', onItemAdd);
+tagsInput.addEventListener('change', onTagsAdd);
+confirmTagsButton.addEventListener('click', setBg);
 
 //Date and time
 
@@ -205,8 +214,31 @@ function getRandomNum(min, max, isRandomizePicture) {
     }
 }
 
-function setBg() {
+function getImageTags() {
+    let query = '';
+    imageTags.forEach((tag) => {
+        query += selectedImageAPI === 'unsplash' ? `&query=${ tag }` : `&tags=${ tag }`;
+    });
+    return query;
+}
+
+async function getDataFromAPI(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw (response.statusText || 'Something went wrong...');
+
+        return response.json();
+    } catch (error) {
+        notificationBanner.classList.remove('closed');
+        notificationBanner.textContent = error;
+        setTimeout(() => notificationBanner.classList.add('closed'), 3000);
+        return;
+    }
+}
+
+async function setBg(event) {
     let timeForPicture;
+
     getRandomNum(1, 20, true);
     let urlPicture;
     if (language === 'en') {
@@ -217,32 +249,34 @@ function setBg() {
         timeForPicture = arrTime[timeNow];
     }
 
+    if (event) {
+        tagsQueryParams = getImageTags();
+    }
+
     if (selectedImageAPI === 'git') {
         urlPicture = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
+        body.style.backgroundImage = `url(${urlPicture})`;
     } else if (selectedImageAPI === 'unsplash') {
-        let url = `https://api.unsplash.com/photos/random?query=${timeForPicture}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                urlPicture = data.urls.regular;
-                body.style.backgroundImage = `url(${urlPicture})`;
-            });
-        return;
+        let url = `https://api.unsplash.com/photos/random?client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        url += tagsQueryParams ? tagsQueryParams : `&query=${timeForPicture}`;
+        const data = await getDataFromAPI(url);
+        if (!data) return;
+
+        urlPicture = data.urls.regular;
+        body.style.backgroundImage = `url(${urlPicture})`;
     } else if (selectedImageAPI === 'flickr') {
-        let url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${timeForPicture}&extras=url_l&format=json&nojsoncallback=1`;
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                urlPicture = data.photos.photo[getRandomNum(0, 100)].url_l;
-                body.style.backgroundImage = `url(${urlPicture})`;
-            });
-        return;
+        let url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&extras=url_l&format=json&nojsoncallback=1`;
+        url += tagsQueryParams ? tagsQueryParams : `&tags=${timeForPicture}`;
+        const data = await getDataFromAPI(url);
+        if (!data) return;
+
+        urlPicture = data.photos.photo[getRandomNum(0, 100)].url_l;
+        body.style.backgroundImage = `url(${urlPicture})`;
     }
-    return urlPicture;
 }
 //Slider
 
-function getSlideNext() {
+async function getSlideNext() {
     if (+randomNum === 20) {
         randomNum = 1;
     } else {
@@ -263,33 +297,30 @@ function getSlideNext() {
     if (selectedImageAPI === 'git') {
         newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTime}/${String(randomNum).padStart(2, '0')}.jpg`;
     } else if (selectedImageAPI === 'unsplash') {
-        newUrl = `https://api.unsplash.com/photos/random?query=${getTime}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
-        fetch(newUrl)
-            .then(res => res.json())
-            .then(data => {
-                newUrl = data.urls.regular;
-                body.style.backgroundImage = `url(${newUrl})`;
-            });
-        return;
+        url = `https://api.unsplash.com/photos/random?client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        url += tagsQueryParams ? tagsQueryParams : `&query=${getTime}`;
+        const data = await getDataFromAPI(url);
+        if (!data) return;
+
+        newUrl = data.urls.regular;
     } else if (selectedImageAPI === 'flickr') {
-        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTime}&extras=url_l&format=json&nojsoncallback=1`;
-        fetch(newUrl)
-            .then(res => res.json())
-            .then(data => {
-                newUrl = data.photos.photo[getRandomNum(0, 100)].url_l;
-                body.style.backgroundImage = `url(${newUrl})`;
-            });
-        return;
+        url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&extras=url_l&format=json&nojsoncallback=1`;
+        url += tagsQueryParams ? tagsQueryParams : `&tags=${getTime}`;
+        const data = await getDataFromAPI(url);
+        if (!data) return;
+
+        newUrl = data.photos.photo[getRandomNum(0, 100)].url_l;
     }
 
     const img = new Image();
     img.src = newUrl;
+
     img.onload = () => {
         body.style.backgroundImage = `url(${newUrl})`;
     };
 }
 
-function getSlidePrev() {
+async function getSlidePrev() {
     if (+randomNum === 1) {
         randomNum = 20;
     } else {
@@ -306,27 +337,22 @@ function getSlidePrev() {
         const timeNow = Math.floor(hours / 6);
         getTime = arrTime[timeNow];
     }
-
     if (selectedImageAPI === 'git') {
         newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTime}/${String(randomNum).padStart(2, '0')}.jpg`;
     } else if (selectedImageAPI === 'unsplash') {
-        newUrl = `https://api.unsplash.com/photos/random?query=${getTime}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
-        fetch(newUrl)
-            .then(res => res.json())
-            .then(data => {
-                newUrl = data.urls.regular;
-                body.style.backgroundImage = `url(${newUrl})`;
-            });
-        return;
+        url = `https://api.unsplash.com/photos/random?client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        url += tagsQueryParams ? tagsQueryParams : `&query=${getTime}`;
+        const data = await getDataFromAPI(url);
+        if (!data) return;
+
+        newUrl = data.urls.regular;
     } else if (selectedImageAPI === 'flickr') {
-        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTime}&extras=url_l&format=json&nojsoncallback=1`;
-        fetch(newUrl)
-            .then(res => res.json())
-            .then(data => {
-                newUrl = data.photos.photo[getRandomNum(0, 100)].url_l;
-                body.style.backgroundImage = `url(${newUrl})`;
-            });
-        return;
+        url = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&extras=url_l&format=json&nojsoncallback=1`;
+        url += tagsQueryParams ? tagsQueryParams : `&tags=${getTime}`;
+        const data = await getDataFromAPI(url);
+        if (!data) return;
+
+        newUrl = data.photos.photo[getRandomNum(0, 100)].url_l;
     }
 
     const img = new Image();
@@ -606,6 +632,18 @@ function settingsTranslate() {
     settingLanguage[0].textContent = `${translation[language === 'en' ? 'eng' : 'ru'].english}`;
 
     settingLanguage[1].textContent = `${translation[language === 'en' ? 'eng' : 'ru'].russian}`;
+
+    if (language === 'en') {
+        confirmTagsButton.textContent = "Apply tags";
+        document.querySelector('.tags-name').placeholder = "Type any tag (e.g. Morning)";
+        textForTodoItem.placeholder = "New Todo";
+        todoTitle.textContent = "Todo list";
+    } else {
+        confirmTagsButton.textContent = "Применить теги";
+        document.querySelector('.tags-name').placeholder = "Введите любой тег (напр., morning)";
+        textForTodoItem.placeholder = "Новая задача";
+        todoTitle.textContent = "Список дел";
+    }
 }
 
 settingWindow.addEventListener('click', ({ target: { id, value } }) => {
@@ -625,16 +663,19 @@ settingWindow.addEventListener('click', ({ target: { id, value } }) => {
 
     if (id === 'pictureGit') {
         selectedImageAPI = value;
-        body.style.backgroundImage = `url(${setBg()})`;
+        tagsWrapper.classList.add('closed');
+        setBg();
     }
 
     if (id === 'pictureApiUnsplash') {
         selectedImageAPI = value;
+        tagsWrapper.classList.remove('closed');
         setBg();
     }
 
     if (id === 'pictureApiFlickr') {
         selectedImageAPI = value;
+        tagsWrapper.classList.remove('closed');
         setBg();
     }
 
@@ -714,4 +755,55 @@ function onItemAdd({ target }) {
 function deleteItem(index) {
     toDos.splice(index);
     renderTodo()
+}
+
+//Tags
+
+function showHideWidget(targetId) {
+    let element;
+    const { name, value } = document.getElementById(targetId);
+    element = document.querySelector(`.${name}`);
+    if (name === 'quote') {
+        element = document.querySelector('.quote-container');
+    }
+    if (name === 'greeting') {
+        element = document.querySelector('.greeting-container');
+    }
+    if (value === 'off') {
+        element.classList.add('closed');
+    } else {
+        element.classList.remove('closed');
+    }
+}
+
+function createTagsList(tagName, index) {
+        const tag = document.createElement('div');
+        tag.classList.add('tag');
+        tag.textContent = tagName;
+        tagsContainer.appendChild(tag);
+
+        const buttonDeleteTag = document.createElement('button');
+        buttonDeleteTag.classList.add('deleteTag');
+        tag.appendChild(buttonDeleteTag);
+        buttonDeleteTag.addEventListener('click', () => deleteTag(index));
+    }
+
+function renderTags() {
+    tagsContainer.innerHTML = '';
+    imageTags.forEach((tagName, index) => {
+        createTagsList(tagName, index);
+    });
+}
+
+function onTagsAdd({ target }) {
+    if (!target.value.trim()) return;
+    imageTags.push(target.value);
+    target.value = '';
+
+    renderTags();
+}
+
+function deleteTag(index) {
+    imageTags.splice(index);
+    renderTags();
 }
