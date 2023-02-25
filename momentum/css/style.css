@@ -22,6 +22,16 @@ body {
   transition-delay: 200ms;
 }
 
+.notification {
+  position: fixed;
+  padding: 10px 20px;
+  font-size: 20px;
+  background-color: rgb(213, 56, 56);
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -528,6 +538,15 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   display: flex;
   justify-content: space-between;
   list-style: none;
+}
+
+.todo-item label.done {
+  text-decoration: line-through;
+}
+
+.todo-item label {
+  display: flex;
+  gap: 7px;
 }
 
 .todo-text {
