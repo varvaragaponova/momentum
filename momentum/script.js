@@ -206,9 +206,17 @@ function getRandomNum(min, max, isRandomizePicture) {
 }
 
 function setBg() {
-    const timeForPicture = getTimeOfDay();
+    let timeForPicture;
     getRandomNum(1, 20, true);
     let urlPicture;
+    if (language === 'en') {
+        timeForPicture = getTimeOfDay();
+    } else {
+        let arrTime = [translation.eng.greetingDay];
+        const timeNow = Math.floor(hours / 6);
+        timeForPicture = arrTime[timeNow];
+    }
+
     if (selectedImageAPI === 'git') {
         urlPicture = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${timeForPicture}/${randomNum}.jpg`;
     } else if (selectedImageAPI === 'unsplash') {
@@ -244,10 +252,18 @@ function getSlideNext() {
 
     let newUrl;
 
+    let getTime;
+    if (language === 'en') {
+        getTime = getTimeOfDay();
+    } else {
+        let arrTime = [translation.eng.greetingDay];
+        const timeNow = Math.floor(hours / 6);
+        getTime = arrTime[timeNow];
+    }
     if (selectedImageAPI === 'git') {
-        newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+        newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTime}/${String(randomNum).padStart(2, '0')}.jpg`;
     } else if (selectedImageAPI === 'unsplash') {
-        newUrl = `https://api.unsplash.com/photos/random?query=${getTimeOfDay()}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        newUrl = `https://api.unsplash.com/photos/random?query=${getTime}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
         fetch(newUrl)
             .then(res => res.json())
             .then(data => {
@@ -256,7 +272,7 @@ function getSlideNext() {
             });
         return;
     } else if (selectedImageAPI === 'flickr') {
-        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTimeOfDay()}&extras=url_l&format=json&nojsoncallback=1`;
+        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTime}&extras=url_l&format=json&nojsoncallback=1`;
         fetch(newUrl)
             .then(res => res.json())
             .then(data => {
@@ -282,10 +298,19 @@ function getSlidePrev() {
 
     let newUrl;
 
+    let getTime;
+    if (language === 'en') {
+        getTime = getTimeOfDay();
+    } else {
+        let arrTime = [translation.eng.greetingDay];
+        const timeNow = Math.floor(hours / 6);
+        getTime = arrTime[timeNow];
+    }
+
     if (selectedImageAPI === 'git') {
-        newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTimeOfDay()}/${String(randomNum).padStart(2, '0')}.jpg`;
+        newUrl = `https://raw.githubusercontent.com/varvaragaponova/stage1-tasks/assets/images/${getTime}/${String(randomNum).padStart(2, '0')}.jpg`;
     } else if (selectedImageAPI === 'unsplash') {
-        newUrl = `https://api.unsplash.com/photos/random?query=${getTimeOfDay()}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
+        newUrl = `https://api.unsplash.com/photos/random?query=${getTime}&client_id=QeEezdXf5jbb0onIJwCZLOykIigLacF63HjPlPEWdmw`;
         fetch(newUrl)
             .then(res => res.json())
             .then(data => {
@@ -294,7 +319,7 @@ function getSlidePrev() {
             });
         return;
     } else if (selectedImageAPI === 'flickr') {
-        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTimeOfDay()}&extras=url_l&format=json&nojsoncallback=1`;
+        newUrl = `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=2ac4c9604f1787e8fd34cbfe413117a8&tags=${getTime}&extras=url_l&format=json&nojsoncallback=1`;
         fetch(newUrl)
             .then(res => res.json())
             .then(data => {
