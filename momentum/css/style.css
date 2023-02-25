@@ -392,6 +392,7 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
 
 .quote-container {
   transition: all 0.5s;
+  margin-bottom: 25px;
 }
 
 .change-quote {
@@ -632,6 +633,37 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
 
 .deleteTag:hover {
   cursor: pointer;
+}
+
+.about-author {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 40%;
+}
+
+.about-author a {
+  display: block;
+  text-decoration: none;
+  color:rgba(265, 265, 265, 0.9);
+}
+
+.about-author a:hover {
+  font-size: 20px;
+  color:rgba(265, 265, 265, 1);
+  transition: all 0.2s;
+}
+
+.about-author a img {
+  width: 60px;
+  height: 40px;
+}
+
+.about-author a img:hover {
+  width: 60px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 @media (max-width: 768px) {
