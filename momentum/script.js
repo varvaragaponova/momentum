@@ -436,6 +436,8 @@ async function getWeather(e) {
       wind.textContent = `Скорость ветра: ${Math.round(data.wind.speed)} м/с`;
       humidity.textContent = `Влажность: ${data.main.humidity}%`;
     }
+
+    setLocalStorageWeather();
   }
 }
 
@@ -463,12 +465,14 @@ function setLocalStorageWeather() {
 function getLocalStorageWeather(isFromTranslation) {
   if (isFromTranslation) {
     if (city.value !== "Minsk" && city.value !== "Минск") return;
-  }
-
-  if (language === "en") {
-    city.value =  "Minsk";
+    else city.value = language === 'en' ? 'Minsk' : 'Минск';
   } else {
-    city.value = "Минск";
+    const localData = localStorage.getItem('city');
+    if (language === "en") {
+      city.value = localData || "Minsk";
+    } else {
+      city.value = localData || "Минск";
+    }
   }
 }
 
