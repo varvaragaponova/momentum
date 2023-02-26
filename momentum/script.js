@@ -100,7 +100,6 @@ const sounds = [
 ];
 
 let randomNum;
-let quotesArr = [];
 let imageTags = [];
 let language = "en";
 let selectedImageAPI = "git";
@@ -476,24 +475,11 @@ function getLocalStorageWeather(isFromTranslation) {
 //Quote of the Day
 
 async function getQuotes() {
-  if (language === "en") {
-    if (!quotesArr.length) {
-      const data = await getDataFromAPI("https://dummyjson.com/quotes");
+  const data = await getDataFromAPI(`https://nbrw4b5exj.execute-api.eu-west-1.amazonaws.com/dev/quotes?lang=${language}`);
+  if (!data) return;
 
-      if (!data) return;
-      quotesArr = data.quotes;
-    }
-    let numberForQuotes = getRandomNum(1, quotesArr.length);
-    quotePhrase.textContent = quotesArr[numberForQuotes - 1].quote;
-    author.textContent = quotesArr[numberForQuotes - 1].author;
-  } else {
-    const quotes = `https://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&lang=ru&format=json`;
-    const data = await getDataFromAPI(quotes);
-    if (!data) return;
-
-    quotePhrase.textContent = data.quoteText;
-    author.textContent = data.quoteAuthor || "Неизвестный";
-  }
+  quotePhrase.textContent = data.body.text;
+  author.textContent = data.body.author;
 }
 
 //Audio
