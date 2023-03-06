@@ -156,7 +156,7 @@ function showTime() {
   time.textContent = `${currentTime}`;
   showDate();
   showGreeting();
-  setTimeout(showTime, 2000);
+  setTimeout(showTime, 1000);
 }
 
 showTime();

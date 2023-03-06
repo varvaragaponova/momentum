@@ -424,6 +424,7 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   border-radius: 10px;
   color: #000;
   transition: all 0.5s;
+  pointer-events: none;
 }
 
 .settings-info.open {
@@ -436,6 +437,7 @@ input[type=range]:not(.volume-slider)::-moz-range-thumb {
   border-radius: 10px;
   color: #000;
   transition: all 1s;
+  pointer-events: auto;
 }
 
 .settings-info span{
